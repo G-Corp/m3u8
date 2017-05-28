@@ -8,6 +8,8 @@ __Version:__ 0.0.1
 
 __Authors:__ Gregoire Lejeune ([`gregoire.lejeune@gmail.com`](mailto:gregoire.lejeune@gmail.com)).
 
+https://tools.ietf.org/html/draft-pantos-http-live-streaming-23
+
 
 ### Licence ###
 
