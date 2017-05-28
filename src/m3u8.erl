@@ -34,7 +34,7 @@ parse(Data) ->
 % @doc
 % Generate a m3u8 to binary
 % @end
--spec to_binary(m3u8()) -> {ok, binary()} | {error, term()}.
+-spec to_binary(m3u8()) -> binary().
 to_binary(M3U8) ->
   m3u8_prv_writer:to_binary(M3U8).
 
@@ -43,12 +43,7 @@ to_binary(M3U8) ->
 % @end
 -spec to_file(m3u8(), file:filename_all()) -> ok | {error, term()}.
 to_file(M3U8, Filename) ->
-  case to_binary(M3U8) of
-    {ok, Data} ->
-      file:write_file(Filename, Data);
-    Error ->
-      Error
-  end.
+  file:write_file(Filename, to_binary(M3U8)).
 
 % @doc
 % Generate a m3u8 master playlist

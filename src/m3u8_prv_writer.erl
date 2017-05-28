@@ -142,7 +142,7 @@ playlists([Playlist|Playlists]) ->
         iframe -> <<?EXT_X_I_FRAME_STREAM_INF>>;
         _ -> <<?EXT_X_STREAM_INF>>
       end)/binary,
-     ",BANDWIDTH=", (w_to_binary(maps:get(bandwidth, Playlist)))/binary,
+     "BANDWIDTH=", (w_to_binary(maps:get(bandwidth, Playlist)))/binary,
      (attribut(Playlist, average_bandwidth, <<"AVERAGE-BANDWIDTH">>, false))/binary,
      (attribut(Playlist, codecs, <<"CODECS">>, true,
                fun(C) ->
