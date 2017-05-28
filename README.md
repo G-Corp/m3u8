@@ -1,14 +1,12 @@
 
 
-# m3u8 for Erlang #
+# m3u8 for Erlang/Elixir #
 
 Copyright (c) 2017 G-Corp
 
 __Version:__ 0.0.1
 
 __Authors:__ Gregoire Lejeune ([`gregoire.lejeune@gmail.com`](mailto:gregoire.lejeune@gmail.com)).
-
-https://tools.ietf.org/html/draft-pantos-http-live-streaming-23
 
 
 ### Licence ###
@@ -26,6 +24,16 @@ Redistribution and use in source and binary forms, with or without modification,
 
 
 THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+
+### References ###
+
+* [HTTP Live Streaming](https://tools.ietf.org.md/draft-pantos-http-live-streaming-23)
+
+* [The 'Codecs' and 'Profiles' Parameters for "Bucket" Media Types](https://tools.ietf.org.md/rfc6381)
+
+* Calculate bandwidth = Int(Sum(segment_file_size) / m3u8_duration * 8)
+
 
 
 ## Modules ##
