@@ -9,6 +9,7 @@
 -type m3u8() :: #{}.
 
 % @doc
+% Parse a m3u8 file
 % @end
 -spec parse(file:filename_all() | binary() | string()) -> {ok, m3u8()} | {error, term()}.
 parse(Data) ->
@@ -31,12 +32,14 @@ parse(Data) ->
   end.
 
 % @doc
+% Generate a m3u8 to binary
 % @end
 -spec to_binary(m3u8()) -> {ok, binary()} | {error, term()}.
 to_binary(M3U8) ->
   m3u8_prv_writer:to_binary(M3U8).
 
 % @doc
+% Save a m3u8 to file
 % @end
 -spec to_file(m3u8(), file:filename_all()) -> ok | {error, term()}.
 to_file(M3U8, Filename) ->
@@ -48,6 +51,7 @@ to_file(M3U8, Filename) ->
   end.
 
 % @doc
+% Generate a m3u8 master playlist
 % @end
 -spec playlist([file:filename_all() | binary() | string() | m3u8()]) -> {ok, m3u8()} | {error, term()}.
 playlist(M3U8s) when is_list(M3U8s) ->

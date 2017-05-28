@@ -11,7 +11,6 @@
 
           , medias => []
           , playlists => []
-          , i_frame_playlists => []
          }).
 
 -define(EXTM3U, "#EXTM3U").
