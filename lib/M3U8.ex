@@ -81,4 +81,7 @@ defmodule M3U8 do
   def unquote(:"playlists")(arg1) do
     :erlang.apply(:"m3u8", :"playlists", [arg1])
   end
+  def unquote(:"discontinuity")(arg1) do
+    :erlang.apply(:"m3u8", :"discontinuity", [arg1])
+  end
 end

@@ -28,6 +28,7 @@
          , medias/1
          , playlist/2
          , playlists/1
+         , discontinuity/1
         ]).
 
 -type m3u8() :: #{
@@ -46,12 +47,12 @@
 -type playlist_type() :: binary().
 -type segment() :: #{
         duration => integer() | float() % MANDATORY
-        , title => binary()               % OPTIONAL = <<>>
-        , sub_range_length => integer()   % OPTIONAL
-        , sub_range_start => integer()    % OPTIONAL
+        , title => binary()             % OPTIONAL = <<>>
+        , sub_range_length => integer() % OPTIONAL
+        , sub_range_start => integer()  % OPTIONAL
        } | discontinuity.
 -type key() :: #{
-        method => binary()            % MANDATORY = <<"NONE">> | <<"AES-128">>
+        method => binary()              % MANDATORY = <<"NONE">> | <<"AES-128">>
         , uri => binary()               % OPTIONAL
         , iv => binary()                % OPTIONAL
         , keyformat => binary()         % OPTIONAL
@@ -324,3 +325,14 @@ playlist(_, _) ->
 -spec playlists(m3u8()) -> [playlist()].
 playlists(#{playlists := Playlists}) ->
   Playlists.
+
+% @doc
+% Add a segment discontinuity
+% @end
+-spec discontinuity(m3u8()) -> {ok, m3u8()} | {error, invalid_discontinuity}.
+discontinuity(#{segments := Segments, keys := Keys} = M3U8) ->
+  {ok, M3U8#{segments => Segments ++ [discontinuity],
+             keys => Keys ++ [discontinuity]}};
+discontinuity(_) ->
+  {error, invalid_discontinuity}.
+
