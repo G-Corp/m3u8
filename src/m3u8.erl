@@ -30,59 +30,71 @@
          , playlists/1
         ]).
 
--type m3u8() :: #{}.
+-type m3u8() :: #{
+          playlist_type => binary() | undefined
+          , target_duration => integer() | undefined
+          , version => integer() | undefined
+          , media_sequence => integer() | undefined
+          , program_date_time => binary() | undefined
+          , allow_cache => boolean() | undefined
+          , i_frames_only => boolean() | undefined
+          , segments => [segment()]
+          , keys => [key()]
+          , medias => [media()]
+          , playlists => [playlist()]
+       }.
 -type playlist_type() :: binary().
 -type segment() :: #{
-        duration => integer() | float(), % MANDATORY
-        title => binary(),               % OPTIONAL = <<>>
-        sub_range_length => integer(),   % OPTIONAL
-        sub_range_start => integer()     % OPTIONAL
+        duration => integer() | float() % MANDATORY
+        , title => binary()               % OPTIONAL = <<>>
+        , sub_range_length => integer()   % OPTIONAL
+        , sub_range_start => integer()    % OPTIONAL
        } | discontinuity.
 -type key() :: #{
-        method => binary(),           % MANDATORY = <<"NONE">> | <<"AES-128">>
-        uri => binary(),              % OPTIONAL
-        iv => binary(),               % OPTIONAL
-        keyformat => binary(),        % OPTIONAL
-        keyformatversions => binary() % OPTIONAL
+        method => binary()            % MANDATORY = <<"NONE">> | <<"AES-128">>
+        , uri => binary()               % OPTIONAL
+        , iv => binary()                % OPTIONAL
+        , keyformat => binary()         % OPTIONAL
+        , keyformatversions => binary() % OPTIONAL
        } | discontinuity.
 -type media() :: #{
-        default => boolean(),
-        uri => binary(),
-        type => binary(),
-        group_id => binary(),
-        language => binary(),
-        default => boolean(),
-        autoselect => boolean(),
-        forced => boolean(),
-        characteristics => binary(),
-        assoc_language => binary(),
-        stream_id => binary(),
-        channels => binary()
+        default => boolean()
+        , uri => binary()
+        , type => binary()
+        , group_id => binary()
+        , language => binary()
+        , default => boolean()
+        , autoselect => boolean()
+        , forced => boolean()
+        , characteristics => binary()
+        , assoc_language => binary()
+        , stream_id => binary()
+        , channels => binary()
        }.
 -type playlist() :: #{
-        bandwidth => integer(), % MANDATORY
-        average_bandwidth => integer(),
-        frame_rate => float(),
-        hdcp_level => binary(),
-        program_id => binary(),
-        codecs => [binary()],
-        resolution => #{width => integer(),
-                        height => integer()},
-        audio => binary(),
-        video => binary(),
-        subtitles => binary(),
-        closed_captions => binary()
+        bandwidth => integer() % MANDATORY
+        , average_bandwidth => integer()
+        , frame_rate => float()
+        , hdcp_level => binary()
+        , program_id => binary()
+        , codecs => [binary()]
+        , resolution => #{width => integer()
+                          , height => integer()}
+        , audio => binary()
+        , video => binary()
+        , subtitles => binary()
+        , closed_captions => binary()
        } | #{
-        type => iframe,
-        bandwidth => integer(), % MANDATORY
-        average_bandwidth => integer(),
-        hdcp_level => binary(),
-        program_id => binary(),
-        codecs => [binary()],
-        resolution => #{width => integer(),
-                        height => integer()},
-        video => binary(),
-        uri => binary()
+        type => iframe
+        , bandwidth => integer() % MANDATORY
+        , average_bandwidth => integer()
+        , hdcp_level => binary()
+        , program_id => binary()
+        , codecs => [binary()]
+        , resolution => #{width => integer()
+                          , height => integer()}
+        , video => binary()
+        , uri => binary()
        }.
 
 % @doc
