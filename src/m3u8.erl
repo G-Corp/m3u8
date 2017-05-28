@@ -264,9 +264,19 @@ iframe_only(#{i_frame_only := AllowCache}) ->
 % Add a new segment
 % @end
 -spec segment(m3u8(), segment()) -> {ok, m3u8()} | {error, invalid_segment}.
-segment(M3U8, Segment) when is_map(M3U8), (is_map(Segment) orelse
-                                           Segment == discontinuity) ->
-  todo; % TODO
+segment(#{segments := Segments} = M3U8, Segment) when is_map(M3U8), is_map(Segment) ->
+  case check_keys(Segment,
+                  [{duration, fun erlang:is_integer/1}],
+                  [{title, fun is_binary/1, <<>>},
+                   {sub_range_length, fun is_integer/1},
+                   {sub_range_start, fun is_integer/1}]) of
+    {ok, Segment0} ->
+      {ok, M3U8#{segments => Segments ++ [Segment0]}};
+    error ->
+      {error, invalid_segment}
+  end;
+segment(#{segments := Segments} = M3U8, discontinuity) when is_map(M3U8) ->
+  {ok, M3U8#{segments => Segments ++ [discontinuity]}};
 segment(_, _) ->
   {error, invalid_segment}.
 
@@ -281,9 +291,20 @@ segments(#{segments := Segments}) ->
 % Add a new key
 % @end
 -spec key(m3u8(), key()) -> {ok, m3u8()} | {error, invalid_key}.
-key(M3U8, Key) when is_map(M3U8), (is_map(Key) orelse
-                                   Key == discontinuity) ->
-  todo; % TODO
+key(#{keys := Keys} = M3U8, Key) when is_map(M3U8), is_map(Key) ->
+  case check_keys(Key,
+                  [{method, [<<"NONE">>, <<"AES-128">>]}],
+                  [{uri, fun is_binary/1},
+                   {iv, fun is_binary/1},
+                   {keyformat, fun is_binary/1},
+                   {keyformatversions, fun is_binary/1}]) of
+    {ok, Key0} ->
+      {ok, M3U8#{keys => Keys ++ [Key0]}};
+    error ->
+      {error, invalid_key}
+  end;
+key(#{keys := Keys} = M3U8, discontinuity) when is_map(M3U8) ->
+  {ok, M3U8#{keys => Keys ++ [discontinuity]}};
 key(_, _) ->
   {error, invalid_key}.
 
@@ -335,4 +356,77 @@ discontinuity(#{segments := Segments, keys := Keys} = M3U8) ->
              keys => Keys ++ [discontinuity]}};
 discontinuity(_) ->
   {error, invalid_discontinuity}.
+
+check_keys(Map, Mandatorys, Optionals) ->
+  case mandatories(Mandatorys, Map) of
+    true ->
+      optionals(Optionals, Map);
+    false ->
+      error
+  end.
+
+optionals(Optionals, Map) ->
+  optionals(Optionals, Map, #{}).
+optionals([], Map, Acc) ->
+  case maps:size(Map) of
+    0 ->
+      {ok, Acc};
+    _ ->
+      error
+  end;
+optionals([{Elem, Check, Alt}|Elems], Map, Acc) ->
+  case maps:get(Elem, Map, '__undefined__') of
+    '__undefined__' ->
+      optionals(Elems, Map, maps:put(Elem, Alt, Acc));
+    Value ->
+      case check_attr(Value, Check) of
+        true ->
+          optionals(Elems, maps:remove(Elem, Map), maps:put(Elem, Value, Acc));
+        false ->
+          error
+      end
+  end;
+optionals([{Elem, Check}|Elems], Map, Acc) ->
+  case maps:get(Elem, Map, '__undefined__') of
+    '__undefined__' ->
+      optionals(Elems, Map, Acc);
+    Value ->
+      case check_attr(Value, Check) of
+        true ->
+          optionals(Elems, maps:remove(Elem, Map), maps:put(Elem, Value, Acc));
+        false ->
+          error
+      end
+  end.
+
+mandatories([], _) ->
+  true;
+mandatories([{Elem, Check}|Elems], Map) ->
+  case maps:get(Elem, Map, '__undefined__') of
+    '__undefined__' ->
+      false;
+    Value ->
+      case check_attr(Value, Check) of
+        true ->
+          mandatories(Elems, Map);
+        false ->
+          false
+      end
+  end.
+
+check_attr(_, []) ->
+  false;
+check_attr(Value, [Check|Checks]) when is_function(Check, 1) ->
+  case Check(Value) of
+    true ->
+      true;
+    false ->
+      check_attr(Value, Checks)
+  end;
+check_attr(Value, [Value|_]) ->
+  true;
+check_attr(Value, [_|Checks]) ->
+  check_attr(Value, Checks);
+check_attr(Value, Check) ->
+  check_attr(Value, [Check]).
 
