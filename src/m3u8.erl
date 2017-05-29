@@ -86,6 +86,7 @@
         , video => binary()                      % OPTIONAL
         , subtitles => binary()                  % OPTIONAL
         , closed_captions => binary()            % OPTIONAL
+        , uri => binary()                        % MANDATORY
        } | #{
         type => iframe                           % MANDATORY
         , bandwidth => integer()                 % MANDATORY
@@ -346,7 +347,7 @@ media(#{medias := Medias} = M3U8, Media) when is_map(M3U8),
     {ok, Media0} ->
       {ok, M3U8#{medias => Medias ++ [Media0]}};
     error ->
-      {error, invalid_key}
+      {error, invalid_media}
   end;
 media(_, _) ->
   {error, invalid_media}.
@@ -369,7 +370,8 @@ playlist(#{playlists := Playlists} = M3U8, Playlist) when is_map(M3U8),
          iframe ->
            check_keys(Playlist,
                       [{bandwidth, fun erlang:is_integer/1},
-                       {uri, fun erlang:is_binary/1}],
+                       {uri, fun erlang:is_binary/1},
+                       {type, fun(X) -> X == iframe end}],
                       [{average_bandwidth, fun erlang:is_integer/1},
                        {hdcp_level, fun erlang:is_binary/1},
                        {program_id, fun erlang:is_binary/1},
@@ -387,7 +389,8 @@ playlist(#{playlists := Playlists} = M3U8, Playlist) when is_map(M3U8),
                        {video, fun erlang:is_binary/1}]);
            _ ->
            check_keys(Playlist,
-                      [{bandwidth, fun erlang:is_integer/1}],
+                      [{bandwidth, fun erlang:is_integer/1},
+                       {uri, fun erlang:is_binary/1}],
                       [{average_bandwidth, fun erlang:is_integer/1},
                        {frame_rate, fun erlang:is_float/1},
                        {hdcp_level, fun erlang:is_binary/1},
@@ -411,7 +414,7 @@ playlist(#{playlists := Playlists} = M3U8, Playlist) when is_map(M3U8),
     {ok, Playlist0} ->
       {ok, M3U8#{playlists => Playlists ++ [Playlist0]}};
     error ->
-      {error, invalid_key}
+      {error, invalid_playlist}
   end;
 playlist(_, _) ->
   {error, invalid_playlist}.
