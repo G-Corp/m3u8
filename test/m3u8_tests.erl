@@ -22,6 +22,33 @@ m3u8_tests_test_() ->
          t("test/data/variant.m3u8"),
          t("test/data/vod-local.m3u8"),
          t("test/data/vod.m3u8")
+     end,
+     fun() ->
+         M = m3u8:new(),
+         {ok, M0} = m3u8:segment(M, #{duration => 200, uri => <<"hello1.ts">>}),
+         {ok, M1} = m3u8:segment(M0, #{duration => 200, uri => <<"hello2.ts">>}),
+         {ok, M2} = m3u8:key(M1, #{method => <<"AES-128">>, uri => <<"key.enc">>, iv => <<"azertqsdfgwxcvb">>}),
+         ?assertMatch(
+            #{allow_cache := undefined,
+              i_frames_only := undefined,
+              keys := [#{iv := <<"azertqsdfgwxcvb">>,
+                         method := <<"AES-128">>,
+                         uri := <<"key.enc">>}],
+              media_sequence := undefined,
+              medias := [],
+              playlist_type := undefined,
+              playlists := [],
+              program_date_time := undefined,
+              segments := [#{duration := 200,
+                             title := <<>>,
+                             uri := <<"hello1.ts">>},
+                           #{duration := 200,
+                             title := <<>>,
+                             uri := <<"hello2.ts">>}],
+              target_duration := undefined,
+              version := undefined}, M2),
+         ?assertEqual(<<"#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"key.enc\",IV=azertqsdfgwxcvb\n#EXTINF:200,\nhello1.ts\n#EXTINF:200,\nhello2.ts">>,
+                      m3u8:to_binary(M2))
      end
    ]}.
 

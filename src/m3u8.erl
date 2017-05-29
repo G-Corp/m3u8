@@ -47,6 +47,7 @@
 -type playlist_type() :: binary().
 -type segment() :: #{
         duration => integer() | float() % MANDATORY
+        , uri => binary()               % MANDATORY
         , title => binary()             % OPTIONAL = <<>>
         , sub_range_length => integer() % OPTIONAL
         , sub_range_start => integer()  % OPTIONAL
@@ -59,43 +60,43 @@
         , keyformatversions => binary() % OPTIONAL
        } | discontinuity.
 -type media() :: #{
-        default => boolean()
-        , uri => binary()
-        , type => binary()
-        , group_id => binary()
-        , language => binary()
-        , default => boolean()
-        , autoselect => boolean()
-        , forced => boolean()
-        , characteristics => binary()
-        , assoc_language => binary()
-        , stream_id => binary()
-        , channels => binary()
+        default => boolean()          % OPTIONAL
+        , name => binary()            % MANDATORY
+        , uri => binary()             % OPTIONAL
+        , type => binary()            % MANDATORY
+        , group_id => binary()        % MANDATORY
+        , language => binary()        % OPTIONAL
+        , autoselect => boolean()     % OPTIONAL
+        , forced => boolean()         % OPTIONAL
+        , characteristics => binary() % OPTIONAL
+        , assoc_language => binary()  % OPTIONAL
+        , stream_id => binary()       % OPTIONAL
+        , channels => binary()        % OPTIONAL
        }.
 -type playlist() :: #{
-        bandwidth => integer() % MANDATORY
-        , average_bandwidth => integer()
-        , frame_rate => float()
-        , hdcp_level => binary()
-        , program_id => binary()
-        , codecs => [binary()]
-        , resolution => #{width => integer()
+        bandwidth => integer()                   % MANDATORY
+        , average_bandwidth => integer()         % OPTIONAL
+        , frame_rate => float()                  % OPTIONAL
+        , hdcp_level => binary()                 % OPTIONAL
+        , program_id => binary()                 % OPTIONAL
+        , codecs => [binary()]                   % OPTIONAL
+        , resolution => #{width => integer()     % OPTIONAL
                           , height => integer()}
-        , audio => binary()
-        , video => binary()
-        , subtitles => binary()
-        , closed_captions => binary()
+        , audio => binary()                      % OPTIONAL
+        , video => binary()                      % OPTIONAL
+        , subtitles => binary()                  % OPTIONAL
+        , closed_captions => binary()            % OPTIONAL
        } | #{
-        type => iframe
-        , bandwidth => integer() % MANDATORY
-        , average_bandwidth => integer()
-        , hdcp_level => binary()
-        , program_id => binary()
-        , codecs => [binary()]
-        , resolution => #{width => integer()
+        type => iframe                           % MANDATORY
+        , bandwidth => integer()                 % MANDATORY
+        , average_bandwidth => integer()         % OPTIONAL
+        , hdcp_level => binary()                 % OPTIONAL
+        , program_id => binary()                 % OPTIONAL
+        , codecs => [binary()]                   % OPTIONAL
+        , resolution => #{width => integer()     % OPTIONAL
                           , height => integer()}
-        , video => binary()
-        , uri => binary()
+        , video => binary()                      % OPTIONAL
+        , uri => binary()                        % MANDATORY
        }.
 
 % @doc
@@ -264,18 +265,22 @@ iframe_only(#{i_frame_only := AllowCache}) ->
 % Add a new segment
 % @end
 -spec segment(m3u8(), segment()) -> {ok, m3u8()} | {error, invalid_segment}.
-segment(#{segments := Segments} = M3U8, Segment) when is_map(M3U8), is_map(Segment) ->
+segment(#{segments := Segments} = M3U8, Segment) when is_map(M3U8),
+                                                      is_list(Segments),
+                                                      is_map(Segment) ->
   case check_keys(Segment,
-                  [{duration, fun erlang:is_integer/1}],
-                  [{title, fun is_binary/1, <<>>},
-                   {sub_range_length, fun is_integer/1},
-                   {sub_range_start, fun is_integer/1}]) of
+                  [{duration, fun erlang:is_integer/1},
+                   {uri, fun erlang:is_binary/1}],
+                  [{title, fun erlang:is_binary/1, <<>>},
+                   {sub_range_length, fun erlang:is_integer/1},
+                   {sub_range_start, fun erlang:is_integer/1}]) of
     {ok, Segment0} ->
       {ok, M3U8#{segments => Segments ++ [Segment0]}};
     error ->
       {error, invalid_segment}
   end;
-segment(#{segments := Segments} = M3U8, discontinuity) when is_map(M3U8) ->
+segment(#{segments := Segments} = M3U8, discontinuity) when is_map(M3U8),
+                                                            is_list(Segments) ->
   {ok, M3U8#{segments => Segments ++ [discontinuity]}};
 segment(_, _) ->
   {error, invalid_segment}.
@@ -291,19 +296,22 @@ segments(#{segments := Segments}) ->
 % Add a new key
 % @end
 -spec key(m3u8(), key()) -> {ok, m3u8()} | {error, invalid_key}.
-key(#{keys := Keys} = M3U8, Key) when is_map(M3U8), is_map(Key) ->
+key(#{keys := Keys} = M3U8, Key) when is_map(M3U8),
+                                      is_list(Keys),
+                                      is_map(Key) ->
   case check_keys(Key,
                   [{method, [<<"NONE">>, <<"AES-128">>]}],
-                  [{uri, fun is_binary/1},
-                   {iv, fun is_binary/1},
-                   {keyformat, fun is_binary/1},
-                   {keyformatversions, fun is_binary/1}]) of
+                  [{uri, fun erlang:is_binary/1},
+                   {iv, fun erlang:is_binary/1},
+                   {keyformat, fun erlang:is_binary/1},
+                   {keyformatversions, fun erlang:is_binary/1}]) of
     {ok, Key0} ->
       {ok, M3U8#{keys => Keys ++ [Key0]}};
     error ->
       {error, invalid_key}
   end;
-key(#{keys := Keys} = M3U8, discontinuity) when is_map(M3U8) ->
+key(#{keys := Keys} = M3U8, discontinuity) when is_map(M3U8),
+                                                is_list(Keys) ->
   {ok, M3U8#{keys => Keys ++ [discontinuity]}};
 key(_, _) ->
   {error, invalid_key}.
@@ -319,8 +327,27 @@ keys(#{keys := Keys}) ->
 % Add a new media
 % @end
 -spec media(m3u8(), media()) -> {ok, m3u8()} | {error, invalid_media}.
-media(M3U8, Media) when is_map(M3U8), is_map(Media) ->
-  todo; % TODO
+media(#{medias := Medias} = M3U8, Media) when is_map(M3U8),
+                                              is_list(Medias),
+                                              is_map(Media) ->
+  case check_keys(Media,
+                  [{name, fun erlang:is_binary/1},
+                   {type, fun erlang:is_binary/1},
+                   {group_id, fun erlang:is_binary/1}],
+                  [{default, fun erlang:is_boolean/1},
+                   {uri, fun erlang:is_binary/1},
+                   {language, fun erlang:is_binary/1},
+                   {autoselect, fun erlang:is_boolean/1},
+                   {forced, fun erlang:is_boolean/1},
+                   {characteristics, fun erlang:is_binary/1},
+                   {assoc_language, fun erlang:is_binary/1},
+                   {stream_id, fun erlang:is_binary/1},
+                   {channels, fun erlang:is_binary/1}]) of
+    {ok, Media0} ->
+      {ok, M3U8#{medias => Medias ++ [Media0]}};
+    error ->
+      {error, invalid_key}
+  end;
 media(_, _) ->
   {error, invalid_media}.
 
@@ -335,8 +362,57 @@ medias(#{medias := Medias}) ->
 % Add a new playlist
 % @end
 -spec playlist(m3u8(), playlist()) -> {ok, m3u8()} | {error, invalid_playlist}.
-playlist(M3U8, Playlist) when is_map(M3U8), is_map(Playlist) ->
-  todo; % TODO
+playlist(#{playlists := Playlists} = M3U8, Playlist) when is_map(M3U8),
+                                                          is_list(Playlists),
+                                                          is_map(Playlist) ->
+  case case maps:get(type, Playlist, undefined) of
+         iframe ->
+           check_keys(Playlist,
+                      [{bandwidth, fun erlang:is_integer/1},
+                       {uri, fun erlang:is_binary/1}],
+                      [{average_bandwidth, fun erlang:is_integer/1},
+                       {hdcp_level, fun erlang:is_binary/1},
+                       {program_id, fun erlang:is_binary/1},
+                       {codecs, fun(L) ->
+                                    erlang:is_list(L) andalso
+                                    lists:all(fun erlang:is_binary/1, L)
+                                end},
+                       {resolution, fun
+                                      (#{width := W, height := H}) ->
+                                        erlang:is_integer(W) andalso
+                                        erlang:is_integer(H);
+                                      (_) ->
+                                        false
+                                    end},
+                       {video, fun erlang:is_binary/1}]);
+           _ ->
+           check_keys(Playlist,
+                      [{bandwidth, fun erlang:is_integer/1}],
+                      [{average_bandwidth, fun erlang:is_integer/1},
+                       {frame_rate, fun erlang:is_float/1},
+                       {hdcp_level, fun erlang:is_binary/1},
+                       {program_id, fun erlang:is_binary/1},
+                       {codecs, fun(L) ->
+                                    erlang:is_list(L) andalso
+                                    lists:all(fun erlang:is_binary/1, L)
+                                end},
+                       {resolution, fun
+                                      (#{width := W, height := H}) ->
+                                        erlang:is_integer(W) andalso
+                                        erlang:is_integer(H);
+                                      (_) ->
+                                        false
+                                    end},
+                       {audio, fun erlang:is_binary/1},
+                       {video, fun erlang:is_binary/1},
+                       {subtitles, fun erlang:is_binary/1},
+                       {closed_captions, fun erlang:is_binary/1}])
+       end of
+    {ok, Playlist0} ->
+      {ok, M3U8#{playlists => Playlists ++ [Playlist0]}};
+    error ->
+      {error, invalid_key}
+  end;
 playlist(_, _) ->
   {error, invalid_playlist}.
 
@@ -357,16 +433,16 @@ discontinuity(#{segments := Segments, keys := Keys} = M3U8) ->
 discontinuity(_) ->
   {error, invalid_discontinuity}.
 
+% -- private --
+
 check_keys(Map, Mandatorys, Optionals) ->
   case mandatories(Mandatorys, Map) of
-    true ->
-      optionals(Optionals, Map);
-    false ->
-      error
+    error ->
+      error;
+    {Opts, Mands} ->
+      optionals(Optionals, Opts, Mands)
   end.
 
-optionals(Optionals, Map) ->
-  optionals(Optionals, Map, #{}).
 optionals([], Map, Acc) ->
   case maps:size(Map) of
     0 ->
@@ -399,18 +475,21 @@ optionals([{Elem, Check}|Elems], Map, Acc) ->
       end
   end.
 
-mandatories([], _) ->
-  true;
-mandatories([{Elem, Check}|Elems], Map) ->
+mandatories(Elems, Map) ->
+  mandatories(Elems, Map, #{}).
+
+mandatories([], Map, Acc) ->
+  {Map, Acc};
+mandatories([{Elem, Check}|Elems], Map, Acc) ->
   case maps:get(Elem, Map, '__undefined__') of
     '__undefined__' ->
-      false;
+      error;
     Value ->
       case check_attr(Value, Check) of
         true ->
-          mandatories(Elems, Map);
+          mandatories(Elems, maps:remove(Elem, Map), maps:put(Elem, Value, Acc));
         false ->
-          false
+          error
       end
   end.
 
