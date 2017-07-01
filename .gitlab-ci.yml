@@ -1,0 +1,10 @@
+image: elixir
+
+stages:
+  - dist
+
+job:
+  stage: dist
+  script:
+    - make dist
+
