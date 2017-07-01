@@ -1,5 +1,9 @@
 image: elixir
 
+before_script:
+  - mix local.hex --force
+  - mix local.rebar --force
+
 stages:
   - dist
 
