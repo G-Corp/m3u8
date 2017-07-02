@@ -40,5 +40,5 @@ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED WAR
 
 
 <table width="100%" border="0" summary="list of modules">
-<tr><td><a href="https://github.com/emedia-project/m3u8/blob/master/doc/m3u8.md" class="module">m3u8</a></td></tr></table>
+<tr><td><a href="https://gitlab.com/glejeune/m3u8/tree/master/doc/m3u8.md" class="module">m3u8</a></td></tr></table>
 
