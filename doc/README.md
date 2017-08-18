@@ -32,8 +32,6 @@ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED WAR
 
 * [The 'Codecs' and 'Profiles' Parameters for "Bucket" Media Types](https://tools.ietf.org.md/rfc6381)
 
-* Calculate bandwidth = Int(Sum(segment_file_size) / m3u8_duration * 8)
-
 
 
 ## Modules ##

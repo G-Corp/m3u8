@@ -35,6 +35,5 @@ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED WAR
 <ul>
 <li><a href="https://tools.ietf.org/html/draft-pantos-http-live-streaming-23">HTTP Live Streaming</a></li>
 <li><a href="https://tools.ietf.org/html/rfc6381">The 'Codecs' and 'Profiles' Parameters for "Bucket" Media Types</a></li>
-<li>Calculate bandwidth = Int(Sum(segment_file_size) / m3u8_duration * 8)</li>
 </ul>
 

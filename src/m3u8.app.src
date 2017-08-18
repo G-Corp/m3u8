@@ -1,5 +1,5 @@
 {application, m3u8,
- [{description, "m3u8 for Erlang/Elixir"},
+ [{description, "m3u8 parser/generator for Erlang/Elixir"},
   {vsn, "0.1.0"},
   {registered, []},
   {applications,
