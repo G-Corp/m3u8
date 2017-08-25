@@ -29,6 +29,8 @@
          , playlist/2
          , playlists/1
          , discontinuity/1
+         , audio_codec_code/1
+         , video_codec_code/2
         ]).
 
 -type m3u8() :: #{
@@ -99,6 +101,36 @@
         , video => binary()                      % OPTIONAL
         , uri => binary()                        % MANDATORY
        }.
+
+% @doc
+% Return a codec code from an audio codec name
+% @end
+-spec audio_codec_code(Code :: string() | binary()) -> string() | undefined.
+audio_codec_code(Code) ->
+  do_audio_codec_code(string:to_lower(bucs:to_string(Code))).
+do_audio_codec_code("aac-lc") -> "mp4a.40.2";
+do_audio_codec_code("he-aac") -> "mp4a.40.5";
+do_audio_codec_code("mp3") -> "mp4a.40.34";
+do_audio_codec_code(_) -> undefined.
+
+% @doc
+% Return a video codec code from a profile and level.
+% @end
+-spec video_codec_code(Profile :: string() | binary(), Level :: float() | string() | binary()) -> string() | undefined.
+video_codec_code(Profile, Level) ->
+  do_video_codec_code(
+    string:to_lower(bucs:to_string(Profile)),
+    bucs:to_float(Level)).
+do_video_codec_code("baseline", 3.0) -> "avc1.66.30";
+do_video_codec_code("baseline", 3.1) -> "avc1.42001f";
+do_video_codec_code("main", 3.0) -> "avc1.77.30";
+do_video_codec_code("main", 3.1) -> "avc1.4d001f";
+do_video_codec_code("main", 4.0) -> "avc1.4d0028";
+do_video_codec_code("main", 4.1) -> "avc1.4d0029";
+do_video_codec_code("high", 3.1) -> "avc1.64001f";
+do_video_codec_code("high", 4.0) -> "avc1.640028";
+do_video_codec_code("high", 4.1) -> "avc1.640029";
+do_video_codec_code(_, _) -> undefined.
 
 % @doc
 % Parse a m3u8 file

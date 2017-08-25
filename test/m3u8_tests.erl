@@ -24,6 +24,25 @@ m3u8_tests_test_() ->
          t("test/data/vod.m3u8")
      end,
      fun() ->
+         ?assertEqual("mp4a.40.2", m3u8:audio_codec_code("aac-lc")),
+         ?assertEqual("mp4a.40.5", m3u8:audio_codec_code("he-aac")),
+         ?assertEqual("mp4a.40.34", m3u8:audio_codec_code("mp3")),
+         ?assertEqual("mp4a.40.2", m3u8:audio_codec_code("AAC-LC")),
+         ?assertEqual("mp4a.40.5", m3u8:audio_codec_code("HE-AAC")),
+         ?assertEqual("mp4a.40.34", m3u8:audio_codec_code("MP3")),
+
+         ?assertEqual("avc1.66.30", m3u8:video_codec_code("baseline" , 3.0)),
+         ?assertEqual("avc1.42001f", m3u8:video_codec_code("baseline" , 3.1)),
+         ?assertEqual("avc1.77.30", m3u8:video_codec_code("main" , 3.0)),
+         ?assertEqual("avc1.4d001f", m3u8:video_codec_code("main" , 3.1)),
+         ?assertEqual("avc1.4d0028", m3u8:video_codec_code("main" , 4.0)),
+         ?assertEqual("avc1.4d0029", m3u8:video_codec_code("main" , 4.1)),
+         ?assertEqual("avc1.64001f", m3u8:video_codec_code("high" , 3.1)),
+         ?assertEqual("avc1.640028", m3u8:video_codec_code("high" , 4.0)),
+         ?assertEqual("avc1.640029", m3u8:video_codec_code("high" , 4.1))
+
+     end,
+     fun() ->
          M = m3u8:new(),
          {ok, M0} = m3u8:segment(M, #{duration => 200, uri => <<"hello1.ts">>}),
          {ok, M1} = m3u8:segment(M0, #{duration => 200, uri => <<"hello2.ts">>}),

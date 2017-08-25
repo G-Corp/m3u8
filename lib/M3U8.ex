@@ -3,6 +3,12 @@
 # Using rebar3_elixir (https://github.com/botsunit/rebar3_elixir)
 # MODIFY IT AT YOUR OWN RISK AND ONLY IF YOU KNOW WHAT YOU ARE DOING!
 defmodule M3U8 do
+  def unquote(:"audio_codec_code")(arg1) do
+    :erlang.apply(:"m3u8", :"audio_codec_code", [arg1])
+  end
+  def unquote(:"video_codec_code")(arg1, arg2) do
+    :erlang.apply(:"m3u8", :"video_codec_code", [arg1, arg2])
+  end
   def unquote(:"parse")(arg1) do
     :erlang.apply(:"m3u8", :"parse", [arg1])
   end
