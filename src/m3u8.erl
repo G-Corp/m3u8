@@ -31,6 +31,8 @@
          , discontinuity/1
          , audio_codec_code/1
          , video_codec_code/2
+         , validate/1
+         , validate/2
         ]).
 
 -type m3u8() :: #{
@@ -101,6 +103,108 @@
         , video => binary()                      % OPTIONAL
         , uri => binary()                        % MANDATORY
        }.
+-type validate_options() :: [{path, string() | binary()} | {recursive, true | false}].
+
+% @equiv validate(M3U8, [])
+-spec validate(M3U8 :: m3u8() | file:filename_all() | binary() | string()) -> ok | {error, [binary()]}.
+validate(M3U8) ->
+  validate(M3U8, []).
+
+% @doc
+% Validate a m3u8 file
+%
+% This function verify if all files referenced in a m3u8 exist.
+% @end
+-spec validate(M3U8 :: m3u8() | file:filename_all() | binary() | string(), Options :: validate_options()) -> ok | {error, [string()]}.
+validate(#{keys := Keys,
+           medias := Medias,
+           playlists := Playlists,
+           segments := Segments}, Options) ->
+  BaseURI = case buclists:keyfind(path, 1, Options, undefined) of
+              undefined -> bucfile:expand_path(".");
+              URI -> bucfile:normalize_path(URI)
+            end,
+  Recursive = buclists:keyfind(recursive, 1, Options, false),
+
+  case validate_elements(
+         Medias,
+         Recursive,
+         BaseURI,
+         validate_elements(
+           Playlists,
+           Recursive,
+           BaseURI,
+           validate_elements(
+             Segments,
+             false,
+             BaseURI,
+             validate_elements(
+               Keys,
+               false,
+               BaseURI,
+               [])))) of
+    [] ->
+      ok;
+    Errors ->
+      {error, Errors}
+  end;
+validate(M3U8, Options) ->
+  case parse(M3U8) of
+    {ok, Content} ->
+      validate(
+        Content,
+        case filelib:is_regular(M3U8) of
+          true ->
+            [{path, filename:dirname(bucfile:normalize_path(M3U8))} | Options];
+          false ->
+            Options
+        end);
+    _ ->
+      {error, [<<"Invalid m3u8">>]}
+  end.
+
+validate_elements([], _, _, Errors) ->
+  Errors;
+validate_elements([#{uri := ElemURI}|Rest], Recursive, BaseURI, Errors) ->
+  case uri_exist(ElemURI, BaseURI) of
+    {local, File, true} ->
+      if
+        Recursive ->
+          case validate(File) of
+            ok ->
+              validate_elements(Rest, Recursive, BaseURI, Errors);
+            {error, OtherErrors} ->
+              validate_elements(Rest, Recursive, BaseURI, Errors ++ OtherErrors)
+          end;
+        true ->
+          validate_elements(Rest, Recursive, BaseURI, Errors)
+      end;
+    {http, _, true} ->
+      validate_elements(Rest, Recursive, BaseURI, Errors);
+    {_, _, false} ->
+      validate_elements(Rest, Recursive, BaseURI, [<<"Missing file: ", (bucs:to_binary(ElemURI))/binary>>|Errors])
+  end;
+validate_elements([_|Rest], Recursive, BaseURI, Errors) ->
+  validate_elements(Rest, Recursive, BaseURI, Errors).
+
+uri_exist(URI, Base) ->
+  case re:run(URI, "^(http|https)://.*") of
+    nomatch ->
+      File = case re:run(URI, "^(.:\\\\|/).*") of
+               nomatch ->
+                 filename:join(Base, URI);
+               _ ->
+                 URI
+             end,
+      {local, File, filelib:is_regular(File)};
+    _ ->
+      case httpc:request(get, {URI, []}, [{autoredirect, true}], []) of
+        {ok, {{_, 200, _}, _, _}} ->
+          {http, URI, true};
+        _ ->
+          {http, URI, false}
+      end
+  end.
 
 % @doc
 % Return a codec code from an audio codec name
