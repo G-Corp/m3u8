@@ -1,15 +1,26 @@
 {application, m3u8,
- [{description, "m3u8 parser/generator for Erlang/Elixir"},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {applications,
-   [kernel,
-    stdlib
-   ]},
-  {env,[]},
-  {modules, []},
+ [{description, "m3u8 parser/generator for Erlang/Elixir"}
+  , {vsn, "0.1.0"}
+  , {registered, []}
+  , {applications,
+     [kernel
+      , stdlib
+     ]}
+  , {env,[]}
+  , {modules, []}
 
-  {maintainers, []},
-  {licenses, []},
-  {links, []}
+  , {maintainers, ["Gregoire Lejeune"]}
+  , {licenses, ["BSD-3"]}
+  , {links, [{"Github", "https://github.com/G-Corp/m3u8"}]}
+  , {files, ["src/*"
+             , "include/*"
+             , "lib/*"
+             , "Makefile"
+             , "bu.mk"
+             , "README.md"
+             , "rebar.config"
+             , "rebar.lock"
+             , "mix.exs"
+             , "mix.lock"]}
+  , {build_tools, ["rebar3", "mix", "make"]}
  ]}.
