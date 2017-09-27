@@ -401,7 +401,7 @@ iframe_only(#{i_frame_only := AllowCache}) ->
 % @doc
 % Add a new segment
 % @end
--spec segment(m3u8(), segment()) -> {ok, m3u8()} | {error, invalid_segment}.
+-spec segment(m3u8(), segment()) -> {ok, m3u8()} | {error, term()}.
 segment(#{segments := Segments} = M3U8, Segment) when is_map(M3U8),
                                                       is_list(Segments),
                                                       is_map(Segment) ->
@@ -413,8 +413,8 @@ segment(#{segments := Segments} = M3U8, Segment) when is_map(M3U8),
                    {sub_range_start, fun erlang:is_integer/1}]) of
     {ok, Segment0} ->
       {ok, M3U8#{segments => Segments ++ [Segment0]}};
-    error ->
-      {error, invalid_segment}
+    Error ->
+      Error
   end;
 segment(#{segments := Segments} = M3U8, discontinuity) when is_map(M3U8),
                                                             is_list(Segments) ->
@@ -432,7 +432,7 @@ segments(#{segments := Segments}) ->
 % @doc
 % Add a new key
 % @end
--spec key(m3u8(), key()) -> {ok, m3u8()} | {error, invalid_key}.
+-spec key(m3u8(), key()) -> {ok, m3u8()} | {error, term()}.
 key(#{keys := Keys} = M3U8, Key) when is_map(M3U8),
                                       is_list(Keys),
                                       is_map(Key) ->
@@ -444,8 +444,8 @@ key(#{keys := Keys} = M3U8, Key) when is_map(M3U8),
                    {keyformatversions, fun erlang:is_binary/1}]) of
     {ok, Key0} ->
       {ok, M3U8#{keys => Keys ++ [Key0]}};
-    error ->
-      {error, invalid_key}
+    Error ->
+      Error
   end;
 key(#{keys := Keys} = M3U8, discontinuity) when is_map(M3U8),
                                                 is_list(Keys) ->
@@ -463,7 +463,7 @@ keys(#{keys := Keys}) ->
 % @doc
 % Add a new media
 % @end
--spec media(m3u8(), media()) -> {ok, m3u8()} | {error, invalid_media}.
+-spec media(m3u8(), media()) -> {ok, m3u8()} | {error, term()}.
 media(#{medias := Medias} = M3U8, Media) when is_map(M3U8),
                                               is_list(Medias),
                                               is_map(Media) ->
@@ -482,8 +482,8 @@ media(#{medias := Medias} = M3U8, Media) when is_map(M3U8),
                    {channels, fun erlang:is_binary/1}]) of
     {ok, Media0} ->
       {ok, M3U8#{medias => Medias ++ [Media0]}};
-    error ->
-      {error, invalid_media}
+    Error ->
+      Error
   end;
 media(_, _) ->
   {error, invalid_media}.
@@ -498,7 +498,7 @@ medias(#{medias := Medias}) ->
 % @doc
 % Add a new playlist
 % @end
--spec playlist(m3u8(), playlist()) -> {ok, m3u8()} | {error, invalid_playlist}.
+-spec playlist(m3u8(), playlist()) -> {ok, m3u8()} | {error, term()}.
 playlist(#{playlists := Playlists} = M3U8, Playlist) when is_map(M3U8),
                                                           is_list(Playlists),
                                                           is_map(Playlist) ->
@@ -523,7 +523,7 @@ playlist(#{playlists := Playlists} = M3U8, Playlist) when is_map(M3U8),
                                         false
                                     end},
                        {video, fun erlang:is_binary/1}]);
-           _ ->
+         _ ->
            check_keys(Playlist,
                       [{bandwidth, fun erlang:is_integer/1},
                        {uri, fun erlang:is_binary/1}],
@@ -549,11 +549,11 @@ playlist(#{playlists := Playlists} = M3U8, Playlist) when is_map(M3U8),
        end of
     {ok, Playlist0} ->
       {ok, M3U8#{playlists => Playlists ++ [Playlist0]}};
-    error ->
-      {error, invalid_playlist}
+    Error ->
+      Error
   end;
 playlist(_, _) ->
-  {error, invalid_playlist}.
+  {error, invalid_playlist_iii}.
 
 % @doc
 % Return the playlists list
@@ -576,8 +576,8 @@ discontinuity(_) ->
 
 check_keys(Map, Mandatorys, Optionals) ->
   case mandatories(Mandatorys, Map) of
-    error ->
-      error;
+    {error, _} = Error ->
+      Error;
     {Opts, Mands} ->
       optionals(Optionals, Opts, Mands)
   end.
@@ -587,7 +587,7 @@ optionals([], Map, Acc) ->
     0 ->
       {ok, Acc};
     _ ->
-      error
+      {error, no_optional_element}
   end;
 optionals([{Elem, Check, Alt}|Elems], Map, Acc) ->
   case maps:get(Elem, Map, '__undefined__') of
@@ -598,7 +598,7 @@ optionals([{Elem, Check, Alt}|Elems], Map, Acc) ->
         true ->
           optionals(Elems, maps:remove(Elem, Map), maps:put(Elem, Value, Acc));
         false ->
-          error
+          {error, {invalid_value, Elem, Value}}
       end
   end;
 optionals([{Elem, Check}|Elems], Map, Acc) ->
@@ -610,7 +610,7 @@ optionals([{Elem, Check}|Elems], Map, Acc) ->
         true ->
           optionals(Elems, maps:remove(Elem, Map), maps:put(Elem, Value, Acc));
         false ->
-          error
+          {error, {invalid_value, Elem, Value}}
       end
   end.
 
@@ -622,13 +622,13 @@ mandatories([], Map, Acc) ->
 mandatories([{Elem, Check}|Elems], Map, Acc) ->
   case maps:get(Elem, Map, '__undefined__') of
     '__undefined__' ->
-      error;
+      {error, {missing_mandatory, Elem}};
     Value ->
       case check_attr(Value, Check) of
         true ->
           mandatories(Elems, maps:remove(Elem, Map), maps:put(Elem, Value, Acc));
         false ->
-          error
+          {error, {invalid_value, Elem, Value}}
       end
   end.
 
