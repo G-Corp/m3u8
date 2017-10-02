@@ -1,10 +1,10 @@
 {"1.1.0",
-[{<<"bucs">>,{pkg,<<"bucs">>,<<"1.0.11">>},0},
+[{<<"bucs">>,{pkg,<<"bucs">>,<<"1.0.12">>},0},
  {<<"goldrush">>,{pkg,<<"goldrush">>,<<"0.1.9">>},1},
- {<<"lager">>,{pkg,<<"lager">>,<<"3.2.4">>},0}]}.
+ {<<"lager">>,{pkg,<<"lager">>,<<"3.5.1">>},0}]}.
 [
 {pkg_hash,[
- {<<"bucs">>, <<"98886B1FA4E25BC0A56C9B236201D087487118162D95D2BD9309D6C0580781D8">>},
+ {<<"bucs">>, <<"61D5AAA41E501C5F1567BC9DBC477F2F140BFFC46ABC1C0E5A0BEC8C65EC1493">>},
  {<<"goldrush">>, <<"F06E5D5F1277DA5C413E84D5A2924174182FB108DABB39D5EC548B27424CD106">>},
- {<<"lager">>, <<"A6DEB74DAE7927F46BD13255268308EF03EB206EC784A94EAF7C1C0F3B811615">>}]}
+ {<<"lager">>, <<"63897A61AF646C59BB928FEE9756CE8BDD02D5A1A2F3551D4A5E38386C2CC071">>}]}
 ].
