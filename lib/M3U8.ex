@@ -75,11 +75,17 @@ defmodule M3U8 do
   def unquote(:"segments")(arg1) do
     :erlang.apply(:"m3u8", :"segments", [arg1])
   end
+  def unquote(:"segments")(arg1, arg2) do
+    :erlang.apply(:"m3u8", :"segments", [arg1, arg2])
+  end
   def unquote(:"key")(arg1, arg2) do
     :erlang.apply(:"m3u8", :"key", [arg1, arg2])
   end
   def unquote(:"keys")(arg1) do
     :erlang.apply(:"m3u8", :"keys", [arg1])
+  end
+  def unquote(:"keys")(arg1, arg2) do
+    :erlang.apply(:"m3u8", :"keys", [arg1, arg2])
   end
   def unquote(:"media")(arg1, arg2) do
     :erlang.apply(:"m3u8", :"media", [arg1, arg2])
@@ -87,11 +93,17 @@ defmodule M3U8 do
   def unquote(:"medias")(arg1) do
     :erlang.apply(:"m3u8", :"medias", [arg1])
   end
+  def unquote(:"medias")(arg1, arg2) do
+    :erlang.apply(:"m3u8", :"medias", [arg1, arg2])
+  end
   def unquote(:"playlist")(arg1, arg2) do
     :erlang.apply(:"m3u8", :"playlist", [arg1, arg2])
   end
   def unquote(:"playlists")(arg1) do
     :erlang.apply(:"m3u8", :"playlists", [arg1])
+  end
+  def unquote(:"playlists")(arg1, arg2) do
+    :erlang.apply(:"m3u8", :"playlists", [arg1, arg2])
   end
   def unquote(:"discontinuity")(arg1) do
     :erlang.apply(:"m3u8", :"discontinuity", [arg1])

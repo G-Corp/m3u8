@@ -22,12 +22,16 @@
          , iframe_only/1
          , segment/2
          , segments/1
+         , segments/2
          , key/2
          , keys/1
+         , keys/2
          , media/2
          , medias/1
+         , medias/2
          , playlist/2
          , playlists/1
+         , playlists/2
          , discontinuity/1
          , audio_codec_code/1
          , video_codec_code/2
@@ -430,6 +434,13 @@ segments(#{segments := Segments}) ->
   Segments.
 
 % @doc
+% Replace all segments
+% @end
+-spec segments(m3u8(), [segment()]) -> m3u8().
+segments(M3U8, Segments) ->
+  M3U8#{segments => Segments}.
+
+% @doc
 % Add a new key
 % @end
 -spec key(m3u8(), key()) -> {ok, m3u8()} | {error, term()}.
@@ -459,6 +470,13 @@ key(_, _) ->
 -spec keys(m3u8()) -> [key()].
 keys(#{keys := Keys}) ->
   Keys.
+
+% @doc
+% Replace all keys
+% @end
+-spec keys(m3u8(), [key()]) -> m3u8().
+keys(M3U8, Keys) ->
+  M3U8#{keys => Keys}.
 
 % @doc
 % Add a new media
@@ -494,6 +512,13 @@ media(_, _) ->
 -spec medias(m3u8()) -> [media()].
 medias(#{medias := Medias}) ->
   Medias.
+
+% @doc
+% Replace all medias
+% @end
+-spec medias(m3u8(), [media()]) -> m3u8().
+medias(M3U8, Medias) ->
+  M3U8#{medias => Medias}.
 
 % @doc
 % Add a new playlist
@@ -561,6 +586,13 @@ playlist(_, _) ->
 -spec playlists(m3u8()) -> [playlist()].
 playlists(#{playlists := Playlists}) ->
   Playlists.
+
+% @doc
+% Replace all playlists
+% @end
+-spec playlists(m3u8(), [playlist()]) -> m3u8().
+playlists(M3U8, Playlists) ->
+  M3U8#{playlists => Playlists}.
 
 % @doc
 % Add a segment discontinuity
