@@ -5,27 +5,27 @@
 -export([to_binary/1]).
 
 to_binary(#{} = M3U8) ->
-  bucbinary:join(
-    remove_empty(
-      [
-       <<?EXTM3U>>,
-       format(M3U8, playlist_type, ?EXT_X_PLAYLIST_TYPE),
-       format(M3U8, target_duration, ?EXT_X_TARGETDURATION),
-       format(M3U8, version, ?EXT_X_VERSION),
-       format(M3U8, media_sequence, ?EXT_X_MEDIA_SEQUENCE),
-       format(M3U8, program_date_time, ?EXT_X_PROGRAM_DATE_TIME),
-       format(M3U8, allow_cache, ?EXT_X_ALLOW_CACHE),
-       case M3U8 of
-         #{i_frames_only := true} ->
-           <<?EXT_X_I_FRAMES_ONLY>>;
-         _ ->
-           <<>>
-       end
-      ]
-      ++ medias(M3U8)
-      ++ playlists(M3U8)
-      ++ segments(M3U8)
-     ), <<"\n">>).
+  <<(bucbinary:join(
+       remove_empty(
+         [
+          <<?EXTM3U>>,
+          format(M3U8, playlist_type, ?EXT_X_PLAYLIST_TYPE),
+          format(M3U8, target_duration, ?EXT_X_TARGETDURATION),
+          format(M3U8, version, ?EXT_X_VERSION),
+          format(M3U8, media_sequence, ?EXT_X_MEDIA_SEQUENCE),
+          format(M3U8, program_date_time, ?EXT_X_PROGRAM_DATE_TIME),
+          format(M3U8, allow_cache, ?EXT_X_ALLOW_CACHE),
+          case M3U8 of
+            #{i_frames_only := true} ->
+              <<?EXT_X_I_FRAMES_ONLY>>;
+            _ ->
+              <<>>
+          end
+         ]
+         ++ medias(M3U8)
+         ++ playlists(M3U8)
+         ++ segments(M3U8)
+        ), <<"\n">>))/binary, "\n">>.
 
 format(M3U8, Field, Name) ->
   format(M3U8, Field, Name, [{undefined, undefined}]).

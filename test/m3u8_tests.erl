@@ -66,7 +66,7 @@ m3u8_tests_test_() ->
                              uri := <<"hello2.ts">>}],
               target_duration := undefined,
               version := undefined}, M2),
-         ?assertEqual(<<"#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"key.enc\",IV=azertqsdfgwxcvb\n#EXTINF:200,\nhello1.ts\n#EXTINF:200,\nhello2.ts">>,
+         ?assertEqual(<<"#EXTM3U\n#EXT-X-KEY:METHOD=AES-128,URI=\"key.enc\",IV=azertqsdfgwxcvb\n#EXTINF:200,\nhello1.ts\n#EXTINF:200,\nhello2.ts\n">>,
                       m3u8:to_binary(M2))
      end
    ]}.
