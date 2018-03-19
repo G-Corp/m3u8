@@ -15,7 +15,7 @@ defmodule M3u8.Mixfile do
 
   def application do
     [
-       applications: [],
+       applications: [:inets, :ssl],
        env: []
     ]
   end
@@ -23,7 +23,7 @@ defmodule M3u8.Mixfile do
   defp deps do
     [
       {:lager, "~> 3.5.1"},
-      {:bucs, "~> 1.0.12"}
+      {:bucs, "~> 1.0"}
     ]
   end
 

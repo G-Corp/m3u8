@@ -5,6 +5,8 @@
   , {applications,
      [kernel
       , stdlib
+      , inets
+      , ssl
      ]}
   , {env,[]}
   , {modules, []}

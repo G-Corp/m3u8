@@ -3,6 +3,7 @@
 
 -export([
          parse/1
+         , download/2
          , to_binary/1
          , to_file/2
          , new/0
@@ -38,6 +39,10 @@
          , validate/1
          , validate/2
         ]).
+
+-export_type([
+              uri/0
+             ]).
 
 -type m3u8() :: #{
           playlist_type => binary() | undefined
@@ -108,6 +113,14 @@
         , uri => binary()                        % MANDATORY
        }.
 -type validate_options() :: [{path, string() | binary()} | {recursive, true | false}].
+-type uri() :: string() | binary().
+
+% @doc
+% Download a m3u8 and content.
+% @end
+-spec download(URI :: uri(), DestDir :: file:filename_all()) -> {ok, file:filename_all()} | {error, term()}.
+download(URI, DestDir) ->
+  m3u8_prv_downloader:run(URI, DestDir).
 
 % @equiv validate(M3U8, [])
 -spec validate(M3U8 :: m3u8() | file:filename_all() | binary() | string()) -> ok | {error, [binary()]}.
@@ -243,14 +256,9 @@ do_video_codec_code(_, _) -> undefined.
 % @doc
 % Parse a m3u8 file
 % @end
--spec parse(file:filename_all() | binary() | string()) -> {ok, m3u8()} | {error, term()}.
+-spec parse(file:filename_all() | uri() | binary() | string()) -> {ok, m3u8()} | {error, term()}.
 parse(Data) ->
-  case case filelib:is_regular(Data) of
-         true ->
-           file:read_file(Data);
-         false ->
-           {ok, bucs:to_binary(Data)}
-       end of
+  case read_m3u8(Data) of
     {ok, Binary} ->
       Lines = binary:split(Binary, [<<"\n">>, <<"\r\n">>], [global, trim]),
       m3u8_prv_parser:parse(Lines,
@@ -261,6 +269,24 @@ parse(Data) ->
                               playlist => false});
     Error ->
       Error
+  end.
+
+read_m3u8(Data) ->
+  case filelib:is_regular(Data) of
+    true ->
+      file:read_file(Data);
+    false ->
+      case bucuri:type(Data) of
+        {ok, _Type} ->
+          case httpc:request(get, {Data, []}, [{autoredirect, true}], []) of
+            {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} ->
+              {ok, bucs:to_binary(Body)};
+            _ ->
+              {error, invalid_uri}
+          end;
+        error ->
+          {ok, bucs:to_binary(Data)}
+      end
   end.
 
 % @doc
@@ -679,4 +705,3 @@ check_attr(Value, [_|Checks]) ->
   check_attr(Value, Checks);
 check_attr(Value, Check) ->
   check_attr(Value, [Check]).
-
