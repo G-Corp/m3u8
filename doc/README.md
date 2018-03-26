@@ -2,7 +2,7 @@
 
 # m3u8 for Erlang/Elixir #
 
-Copyright (c) 2017 G-Corp
+Copyright (c) 2017-2018 G-Corp
 
 __Version:__ 0.0.1
 
@@ -13,7 +13,7 @@ __Authors:__ Gregoire Lejeune ([`gregoire.lejeune@gmail.com`](mailto:gregoire.le
 
 m3u8 is available for use under the following license, commonly known as the 3-clause (or "modified") BSD license:
 
-Copyright (c) 2017 G-Corp<br />
+Copyright (c) 2017-2018 G-Corp<br />
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 

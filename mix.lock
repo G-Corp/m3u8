@@ -1,5 +1,5 @@
 %{
-  "bucs": {:hex, :bucs, "1.0.13", "2e266d850d123b633342fec01d9fc56f85abde109ca25e6715b4328960b2829d", [:make, :mix, :rebar3], [], "hexpm"},
+  "bucs": {:hex, :bucs, "1.0.14", "e6d013183d3729b5adfd2d1ba430ccf88d0bc0269ae4261363e2fccde1bb19ac", [:make, :mix, :rebar3], [], "hexpm"},
   "goldrush": {:hex, :goldrush, "0.1.9", "f06e5d5f1277da5c413e84d5a2924174182fb108dabb39d5ec548b27424cd106", [:rebar3], [], "hexpm"},
   "lager": {:hex, :lager, "3.5.2", "614a8c8f67bf99b69eb264ea22121ad25511c055aaec09b086773d5108c6767f", [:rebar3], [{:goldrush, "0.1.9", [hex: :goldrush, repo: "hexpm", optional: false]}], "hexpm"},
 }
