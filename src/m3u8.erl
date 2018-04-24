@@ -215,7 +215,7 @@ uri_exist(URI, Base) ->
              end,
       {local, File, filelib:is_regular(File)};
     _ ->
-      case httpc:request(get, {URI, []}, [{autoredirect, true}], []) of
+      case httpc:request(get, {bucs:to_string(URI), []}, [{autoredirect, true}], []) of
         {ok, {{_, 200, _}, _, _}} ->
           {http, URI, true};
         _ ->
@@ -278,7 +278,7 @@ read_m3u8(Data) ->
     false ->
       case bucuri:type(Data) of
         {ok, _Type} ->
-          case httpc:request(get, {Data, []}, [{autoredirect, true}], []) of
+          case httpc:request(get, {bucs:to_string(Data), []}, [{autoredirect, true}], []) of
             {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} ->
               {ok, bucs:to_binary(Body)};
             {ok, {{_Version, ErrorCode, _ReasonPhrase}, _Headers, _Body}} ->
