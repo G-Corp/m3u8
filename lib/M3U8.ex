@@ -1,6 +1,6 @@
 # File: M3U8.ex
 # This file was generated from m3u8.beam
-# Using rebar3_elixir (https://github.com/botsunit/rebar3_elixir)
+# Using rebar3_elixir (https://github.com/G-Corp/rebar3_elixir)
 # MODIFY IT AT YOUR OWN RISK AND ONLY IF YOU KNOW WHAT YOU ARE DOING!
 defmodule M3U8 do
   def unquote(:"download")(arg1, arg2) do

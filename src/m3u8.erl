@@ -281,8 +281,12 @@ read_m3u8(Data) ->
           case httpc:request(get, {Data, []}, [{autoredirect, true}], []) of
             {ok, {{_Version, 200, _ReasonPhrase}, _Headers, Body}} ->
               {ok, bucs:to_binary(Body)};
-            _ ->
-              {error, invalid_uri}
+            {ok, {{_Version, ErrorCode, _ReasonPhrase}, _Headers, _Body}} ->
+              {error, {http_error, ErrorCode}};
+            {error, {Reason, _}} ->
+              {error, Reason};
+            {error, Reason} ->
+              {error, Reason}
           end;
         error ->
           {ok, bucs:to_binary(Data)}
