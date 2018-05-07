@@ -26,8 +26,8 @@ defmodule M3u8.Mixfile do
 
   defp deps do
     [
-      {:lager, "~> 3.5.1"},
-      {:bucs, "~> 1.0.14"}
+      {:lager, "~> 3.6.2"},
+      {:bucs, "~> 1.0.15"}
     ]
   end
 
