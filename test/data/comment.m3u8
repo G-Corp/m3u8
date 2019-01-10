@@ -1,0 +1,5 @@
+#EXTM3U
+## Comment
+#EXT-X-VERSION:3
+#EXTINF:10.0,
+http://example.com/movie1/fileSequenceA.ts

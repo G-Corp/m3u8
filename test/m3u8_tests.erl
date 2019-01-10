@@ -21,7 +21,8 @@ m3u8_tests_test_() ->
          t("test/data/master_720.m3u8"),
          t("test/data/variant.m3u8"),
          t("test/data/vod-local.m3u8"),
-         t("test/data/vod.m3u8")
+         t("test/data/vod.m3u8"),
+         t("test/data/comment.m3u8")
      end,
      fun() ->
          ?assertEqual("mp4a.40.2", m3u8:audio_codec_code("aac-lc")),
