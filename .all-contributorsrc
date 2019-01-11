@@ -1,0 +1,35 @@
+{
+  "projectName": "m3u8",
+  "projectOwner": "G-Corp",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "badgeTemplate": "[![All Contributors](https://img.shields.io/badge/all_contributors-<%= contributors.length %>-orange.svg)](#contributors)",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": false,
+  "contributors": [
+    {
+      "login": "glejeune",
+      "name": "Gregoire Lejeune",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/15168?v=4",
+      "profile": "http://lejeun.es",
+      "contributions": [
+        "code",
+        "doc",
+        "test"
+      ]
+    },
+    {
+      "login": "RyanSiu1995",
+      "name": "Ryan, Siu Long Wa",
+      "avatar_url": "https://avatars3.githubusercontent.com/u/24809843?v=4",
+      "profile": "https://github.com/RyanSiu1995",
+      "contributions": [
+        "code",
+        "test"
+      ]
+    }
+  ]
+}

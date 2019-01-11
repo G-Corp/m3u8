@@ -2,7 +2,7 @@
 
 # m3u8 for Erlang/Elixir #
 
-Copyright (c) 2017-2018 G-Corp
+Copyright (c) 2017-2019 G-Corp
 
 __Version:__ 0.0.1
 
@@ -13,7 +13,7 @@ __Authors:__ Gregoire Lejeune ([`gregoire.lejeune@gmail.com`](mailto:gregoire.le
 
 m3u8 is available for use under the following license, commonly known as the 3-clause (or "modified") BSD license:
 
-Copyright (c) 2017-2018 G-Corp<br />
+Copyright (c) 2017-2019 G-Corp<br />
 
 Redistribution and use in source and binary forms, with or without modification, are permitted provided that the following conditions are met:
 
@@ -34,9 +34,21 @@ THIS SOFTWARE IS PROVIDED BY THE AUTHOR ''AS IS'' AND ANY EXPRESS OR IMPLIED WAR
 
 
 
+
 ## Modules ##
 
 
 <table width="100%" border="0" summary="list of modules">
 <tr><td><a href="https://github.com/G-Corp/m3u8/blob/master/doc/m3u8.md" class="module">m3u8</a></td></tr></table>
 
+## Contributors ##
+
+Thanks goes to these wonderful people ([emoji key](https://github.com/kentcdodds/all-contributors#emoji-key)):
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore -->
+| [<img src="https://avatars1.githubusercontent.com/u/15168?v=4" width="100px;"/><br /><sub><b>Gregoire Lejeune</b></sub>](http://lejeun.es)<br />[💻](https://github.com/G-Corp/m3u8/commits?author=glejeune "Code") [📖](https://github.com/G-Corp/m3u8/commits?author=glejeune "Documentation") [⚠️](https://github.com/G-Corp/m3u8/commits?author=glejeune "Tests") | [<img src="https://avatars3.githubusercontent.com/u/24809843?v=4" width="100px;"/><br /><sub><b>Ryan, Siu Long Wa</b></sub>](https://github.com/RyanSiu1995)<br />[💻](https://github.com/G-Corp/m3u8/commits?author=RyanSiu1995 "Code") [⚠️](https://github.com/G-Corp/m3u8/commits?author=RyanSiu1995 "Tests") |
+| :---: | :---: |
+<!-- ALL-CONTRIBUTORS-LIST:END -->
+
+This project follows the [all-contributors](https://github.com/kentcdodds/all-contributors) specification. Contributions of any kind welcome!
