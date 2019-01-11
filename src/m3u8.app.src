@@ -1,6 +1,6 @@
 {application, m3u8,
  [{description, "m3u8 parser/generator for Erlang/Elixir"}
-  , {vsn, "0.1.1"}
+  , {vsn, "0.2.0"}
   , {registered, []}
   , {applications,
      [kernel
@@ -11,7 +11,6 @@
   , {env,[]}
   , {modules, []}
 
-  , {maintainers, ["Gregoire Lejeune"]}
   , {licenses, ["BSD-3"]}
   , {links, [{"Github", "https://github.com/G-Corp/m3u8"}]}
   , {files, ["src/*"
