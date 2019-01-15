@@ -1,5 +1,5 @@
-#EXTM3U
+#EXTM3U ## Comment
 ## Comment
-#EXT-X-VERSION:3
-#EXTINF:10.0,
-http://example.com/movie1/fileSequenceA.ts
+#EXT-X-VERSION:3 ## Comment
+#EXTINF:10.0, ## Comment
+http://example.com/movie1/fileSequenceA.ts # Comment

@@ -207,9 +207,6 @@ parse([<<?EXT_X_ALLOW_CACHE, Data/binary>>|Lines],
                              end},
         State);
 
-parse([<<?COMMENT, _/binary>>|Lines], M3U8, State) ->
-  parse(Lines, M3U8, State);
-
 % Segment URI
 parse([URI|Lines],
       #{segments := Segments} = M3U8,

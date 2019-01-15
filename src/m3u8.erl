@@ -261,7 +261,13 @@ parse(Data) ->
   case read_m3u8(Data) of
     {ok, Binary} ->
       Lines = binary:split(Binary, [<<"\n">>, <<"\r\n">>], [global, trim]),
-      m3u8_prv_parser:parse(Lines,
+      TrimmedLines = lists:map(fun(Data) ->
+                                      case string:split(Data, "##") of
+                                          [Body|_Comment] -> string:trim(Body, trailing, " ");
+                                          _ -> ""
+                                      end
+                              end, Lines),
+      m3u8_prv_parser:parse(TrimmedLines,
                             ?M3U8,
                             #{segment => false,
                               header => false,
