@@ -20,6 +20,12 @@ to_binary(#{} = M3U8) ->
               <<?EXT_X_I_FRAMES_ONLY>>;
             _ ->
               <<>>
+          end,
+          case M3U8 of
+            #{independent_segments := true} ->
+              <<?EXT_X_INDEPENDENT_SEGMENTS>>;
+            _ ->
+              <<>>
           end
          ]
          ++ medias(M3U8)

@@ -189,7 +189,12 @@ parse([<<?EXT_X_I_FRAME_STREAM_INF, Data/binary>>|Lines],
 
 % TODO: EXT-X-SESSION-KEY
 
-% TODO: EXT-X-INDEPENDENT-SEGMENTS
+parse([<<?EXT_X_INDEPENDENT_SEGMENTS>>|Lines],
+      M3U8,
+      #{header := true,
+        playlist := false,
+        segment := false} = State) ->
+  parse(Lines, M3U8#{independent_segments => true}, State);
 
 % TODO: EXT-X-START
 
@@ -231,8 +236,8 @@ parse([URI|Lines],
 
 parse([<<>>|Lines], M3U8, State) ->
   parse(Lines, M3U8, State);
-parse([X|_], _, _) ->
-  {error, invalid_entry, X}.
+parse([X|Lines], M3U8, State) ->
+  parse(Lines, M3U8, State).
 
 % -----------------------------------------------------------------------------
 
@@ -507,4 +512,3 @@ get_quoted_attr(Data, Name, Map, Key) ->
   get_quoted_attr(Data, Name, Map, Key, fun(X) -> {ok, X} end).
 get_attr(Data, Name, Map, Key) ->
   get_attr(Data, Name, Map, Key, fun(X) -> {ok, X} end).
-

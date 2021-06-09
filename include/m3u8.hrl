@@ -6,6 +6,7 @@
           , program_date_time => undefined
           , allow_cache => undefined
           , i_frames_only => undefined
+          , independent_segments => undefined
           , segments => []
           , keys => []
 
@@ -33,7 +34,6 @@
 -define(EXT_X_I_FRAME_STREAM_INF, "#EXT-X-I-FRAME-STREAM-INF:").
 % TODO: EXT-X-SESSION-DATA
 % TODO: EXT-X-SESSION-KEY
-% TODO: EXT-X-INDEPENDENT-SEGMENTS
+-define(EXT_X_INDEPENDENT_SEGMENTS, "#EXT-X-INDEPENDENT-SEGMENTS").
 % TODO: EXT-X-START
 -define(EXT_X_ALLOW_CACHE, "#EXT-X-ALLOW-CACHE:").
-
