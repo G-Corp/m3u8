@@ -111,4 +111,80 @@ defmodule M3U8 do
   def unquote(:"discontinuity")(arg1) do
     :erlang.apply(:"m3u8", :"discontinuity", [arg1])
   end
+
+  def absolute_manifest(url) do
+    with  {:ok, %URI{} = uri} <- url |> validate_uri(),
+          abs_path <- uri |> extract_abosult_path(),
+          {:ok, m3u8} <- url |> parse()
+    do
+      absolute_manifest(m3u8, abs_path)
+    else
+      _ -> {:error, :cant_generate_absolute_manifest}
+    end
+  end
+  def absolute_manifest(%{
+    allow_cache: _,
+    i_frames_only: _,
+    independent_segments: _,
+    keys: _,
+    media_sequence: _,
+    medias: _,
+    playlist_type: _,
+    playlists: _,
+    program_date_time: _,
+    segments: _,
+    target_duration: _,
+    version: _
+  } = m3u8, path) do
+    with {:ok, absolute_manifest} <- convert_to_absolute(m3u8, path)
+    do
+      {:ok, absolute_manifest}
+    else
+      _ -> {:error, :cant_generate_absolute_manifest}
+    end
+  end
+
+
+  ###############
+  ##  private  ##
+  ###############
+
+  defp validate_uri(url) do
+    uri = url |> URI.parse()
+    uri
+    |> case do
+      %URI{scheme: nil} -> {:error, uri}
+      %URI{host: nil} -> {:error, uri}
+      %URI{path: nil} -> {:error, uri}
+      uri -> {:ok, uri}
+    end
+  end
+
+  defp extract_abosult_path(%URI{} = uri) do
+    abs_path =
+      %URI{uri | path: uri.path
+                       |> String.split("/")
+                       |> Enum.slice(0..-2)
+                       |> Enum.join("/")
+      }
+      |> URI.to_string()
+    abs_path <> "/"
+  end
+
+  defp convert_to_absolute(%{medias: medias, playlists: playlists} = m3u8, path),
+    do: {:ok, %{m3u8 | medias: do_convert_to_absolute(medias, path), playlists: do_convert_to_absolute(playlists, path)}}
+  defp convert_to_absolute(m3u8, _), do: {:error, m3u8}
+
+  defp do_convert_to_absolute([], _), do: []
+  defp do_convert_to_absolute([%{uri: uri} = el | rest], path),
+    do: [%{el | uri: convert_uri(uri, path)} | do_convert_to_absolute(rest, path)]
+
+  defp convert_uri(uri, path) do
+    uri
+    |> validate(uri)
+    |> case do
+      {:ok, uri} -> uri
+      {:error, _} -> path <> uri
+    end
+  end
 end
