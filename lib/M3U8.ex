@@ -3,6 +3,7 @@
 # Using rebar3_elixir (https://github.com/G-Corp/rebar3_elixir)
 # MODIFY IT AT YOUR OWN RISK AND ONLY IF YOU KNOW WHAT YOU ARE DOING!
 defmodule M3U8 do
+
   def unquote(:"download")(arg1, arg2) do
     :erlang.apply(:"m3u8", :"download", [arg1, arg2])
   end
@@ -171,8 +172,8 @@ defmodule M3U8 do
     abs_path <> "/"
   end
 
-  defp convert_to_absolute(%{medias: medias, playlists: playlists} = m3u8, path),
-    do: {:ok, %{m3u8 | medias: do_convert_to_absolute(medias, path), playlists: do_convert_to_absolute(playlists, path)}}
+  defp convert_to_absolute(%{medias: medias, playlists: playlists, segments: segments} = m3u8, path),
+    do: {:ok, %{m3u8 | medias: do_convert_to_absolute(medias, path), playlists: do_convert_to_absolute(playlists, path), segments: do_convert_to_absolute(segments, path)}}
   defp convert_to_absolute(m3u8, _), do: {:error, m3u8}
 
   defp do_convert_to_absolute([], _), do: []
