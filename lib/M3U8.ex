@@ -145,6 +145,11 @@ defmodule M3U8 do
     end
   end
 
+  def alter_manifest_key(%{keys: [%{uri: uri} = key]} = m3u8, key_token),
+    do: m3u8 |> Map.put(:keys, [key |> Map.put(:uri, uri <> "/" <> key_token)])
+  def alter_manifest_key(m3u8, _key_token),
+    do: m3u8
+
 
   ###############
   ##  private  ##
@@ -177,6 +182,7 @@ defmodule M3U8 do
   defp convert_to_absolute(m3u8, _), do: {:error, m3u8}
 
   defp do_convert_to_absolute([], _), do: []
+  defp do_convert_to_absolute([:endlist], _), do: []
   defp do_convert_to_absolute([%{uri: uri} = el | rest], path),
     do: [%{el | uri: convert_uri(uri, path)} | do_convert_to_absolute(rest, path)]
 
