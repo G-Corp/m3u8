@@ -1,5 +1,5 @@
 %{
-  "bucs": {:hex, :bucs, "1.0.16", "d69a4cd6d1238cd1adc5c95673dbde0f8459a5dbb7d746516434d8c6d935e96f", [:make, :mix, :rebar3], [], "hexpm"},
-  "goldrush": {:hex, :goldrush, "0.1.9", "f06e5d5f1277da5c413e84d5a2924174182fb108dabb39d5ec548b27424cd106", [:rebar3], [], "hexpm"},
-  "lager": {:hex, :lager, "3.6.8", "897efc7679bb82383448646c96768cdc4e747464dd18b999c7aaca485686b0da", [:rebar3], [{:goldrush, "0.1.9", [hex: :goldrush, repo: "hexpm", optional: false]}], "hexpm"},
+  "bucs": {:hex, :bucs, "1.0.16", "d69a4cd6d1238cd1adc5c95673dbde0f8459a5dbb7d746516434d8c6d935e96f", [:make, :mix, :rebar3], [], "hexpm", "ff6a5c72a500ad7aec1ee3ba164ae3c450eadee898b0d151e1faca18ac8d0d62"},
+  "goldrush": {:hex, :goldrush, "0.1.9", "f06e5d5f1277da5c413e84d5a2924174182fb108dabb39d5ec548b27424cd106", [:rebar3], [], "hexpm", "99cb4128cffcb3227581e5d4d803d5413fa643f4eb96523f77d9e6937d994ceb"},
+  "lager": {:hex, :lager, "3.6.8", "897efc7679bb82383448646c96768cdc4e747464dd18b999c7aaca485686b0da", [:rebar3], [{:goldrush, "0.1.9", [hex: :goldrush, repo: "hexpm", optional: false]}], "hexpm", "2b280ecfa56a0822d519a4b0505dc049d70269285dcd5c5700ebfda75d8eb34c"},
 }

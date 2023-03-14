@@ -150,10 +150,11 @@ playlists([Playlist|Playlists]) ->
       end)/binary,
      "BANDWIDTH=", (w_to_binary(maps:get(bandwidth, Playlist)))/binary,
      (attribut(Playlist, average_bandwidth, <<"AVERAGE-BANDWIDTH">>, false))/binary,
-     (attribut(Playlist, codecs, <<"CODECS">>, true,
-               fun(C) ->
-                   bucbinary:join([w_to_binary(E) || E <- C], <<",">>)
-               end))/binary,
+    %  (attribut(Playlist, codecs, <<"CODECS">>, true,
+    %            fun(C) ->
+    %                bucbinary:join([w_to_binary(E) || E <- C], <<",">>)
+    %            end))/binary,
+     (attribut(Playlist, codecs, <<"CODECS">>, true))/binary,
      (attribut(Playlist, resolution, <<"RESOLUTION">>, false,
                fun(#{width := W, height := H}) ->
                    <<(w_to_binary(W))/binary, "x", (w_to_binary(H))/binary>>
