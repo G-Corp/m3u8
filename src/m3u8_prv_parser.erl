@@ -395,6 +395,13 @@ parse_ext_x_stream_inf(Data, State) ->
                        end),
   Playlist3 = get_attr(Data, <<"HDCP-LEVEL">>, Playlist2, hdcp_level),
   Playlist4 = get_attr(Data, <<"PROGRAM-ID">>, Playlist3, program_id),
+  % Playlist5 = get_quoted_attr(Data,
+  %                             <<"CODECS">>,
+  %                             Playlist4,
+  %                             codecs,
+  %                             fun(C) ->
+  %                                 {ok, binary:split(C, [<<",">>], [global])}
+  %                             end),
   Playlist5 = get_quoted_attr(Data,
                               <<"CODECS">>,
                               Playlist4,
